@@ -24,12 +24,14 @@ max_lifetime = "300s"
 params = ""
 
 [security]
-#captcha_url = "https://js.hcaptcha.com/1/api.js"
-#captcha_verify_url = "https://hcaptcha.com/siteverify"
-#captcha_class = "h-captcha"
-#captcha_response_field = "h-captcha-response"
-captcha_url = "https://challenges.cloudflare.com/turnstile/v0/api.js"
-captcha_verify_url = "https://challenges.cloudflare.com/turnstile/v0/siteverify"
-captcha_class = "cf-turnstile"
-captcha_response_field = "cf-turnstile-response"
+# Using hCaptcha
+captcha_url = "https://js.hcaptcha.com/1/api.js"
+captcha_verify_url = "https://hcaptcha.com/siteverify"
+captcha_class = "h-captcha"
+captcha_response_field = "h-captcha-response"
 
+# Using Cloudflare Turnstile
+#captcha_url = "https://challenges.cloudflare.com/turnstile/v0/api.js"
+#captcha_verify_url = "https://challenges.cloudflare.com/turnstile/v0/siteverify"
+#captcha_class = "cf-turnstile"
+#captcha_response_field = "cf-turnstile-response"
