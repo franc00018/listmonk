@@ -17,18 +17,15 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Masterminds/sprig/v3"
 	"github.com/gdgvda/cron"
 	"github.com/jmoiron/sqlx"
 	"github.com/jmoiron/sqlx/types"
-	"github.com/knadh/goyesql/v2"
 	goyesqlx "github.com/knadh/goyesql/v2/sqlx"
 	"github.com/knadh/koanf/maps"
 	"github.com/knadh/koanf/parsers/toml"
 	"github.com/knadh/koanf/providers/confmap"
 	"github.com/knadh/koanf/providers/file"
 	"github.com/knadh/koanf/providers/posflag"
-	"github.com/knadh/koanf/v2"
 	"github.com/knadh/listmonk/internal/auth"
 	"github.com/knadh/listmonk/internal/bounce"
 	"github.com/knadh/listmonk/internal/bounce/mailbox"
@@ -44,10 +41,8 @@ import (
 	"github.com/knadh/listmonk/internal/subimporter"
 	"github.com/knadh/listmonk/models"
 	"github.com/knadh/stuffbin"
-	"github.com/labstack/echo/v4"
 	"github.com/lib/pq"
 	flag "github.com/spf13/pflag"
-	"gopkg.in/volatiletech/null.v6"
 )
 
 const (
@@ -89,7 +84,10 @@ type constants struct {
 
 		EnableCaptcha bool   `koanf:"enable_captcha"`
 		CaptchaKey    string `koanf:"captcha_key"`
+		CaptchaURL    string `koanf:"captcha_url"`
+		VerifyURL     string `koanf:"captcha_verify_url"`
 		CaptchaSecret string `koanf:"captcha_secret"`
+		CaptchaClass  string `koanf:"captcha_class"`
 	} `koanf:"security"`
 
 	Appearance struct {
@@ -847,6 +845,7 @@ func initHTTPServer(app *App) *echo.Echo {
 func initCaptcha() *captcha.Captcha {
 	return captcha.New(captcha.Opt{
 		CaptchaSecret: ko.String("security.captcha_secret"),
+		VerifyURL:     ko.String("security.captcha_verify_url"),
 	})
 }
 

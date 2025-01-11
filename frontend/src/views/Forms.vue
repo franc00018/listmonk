@@ -93,8 +93,8 @@ export default Vue.extend({
       // Captcha?
       if (this.settings['security.enable_captcha']) {
         h += '\n'
-          + `    <div class="h-captcha" data-sitekey="${this.settings['security.captcha_key']}"></div>\n`
-          + `    <${'script'} src="https://js.hcaptcha.com/1/api.js" async defer></${'script'}>\n`;
+          + `    <div class="$this.settings['security.captcha_class']" data-sitekey="${this.settings['security.captcha_key']}"></div>\n`
+          + `    <${'script'} src={"$this.settings['security.captcha_url']}" async defer></${'script'}>\n`;
       }
 
       h += '\n'

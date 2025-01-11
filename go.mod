@@ -1,16 +1,18 @@
 module github.com/knadh/listmonk
 
-go 1.20
+go 1.21
+
+toolchain go1.23.4
 
 require (
 	github.com/Masterminds/sprig/v3 v3.2.3
 	github.com/coreos/go-oidc/v3 v3.9.0
 	github.com/disintegration/imaging v1.6.2
 	github.com/emersion/go-message v0.16.0
-	github.com/gdgvda/cron v0.2.0
+	github.com/gdgvda/cron v0.3.0
 	github.com/gofrs/uuid/v5 v5.0.0
 	github.com/gorilla/feeds v1.1.1
-	github.com/jmoiron/sqlx v1.3.5
+	github.com/jmoiron/sqlx v1.4.0
 	github.com/knadh/go-pop3 v0.3.0
 	github.com/knadh/goyesql/v2 v2.2.0
 	github.com/knadh/koanf/maps v0.1.1
@@ -18,14 +20,14 @@ require (
 	github.com/knadh/koanf/parsers/toml v0.1.0
 	github.com/knadh/koanf/providers/confmap v0.1.0
 	github.com/knadh/koanf/providers/env v0.1.0
-	github.com/knadh/koanf/providers/file v0.1.0
+	github.com/knadh/koanf/providers/file v1.1.2
 	github.com/knadh/koanf/providers/posflag v0.1.0
 	github.com/knadh/koanf/providers/rawbytes v0.1.0
 	github.com/knadh/koanf/v2 v2.0.1
 	github.com/knadh/paginator v1.0.1
 	github.com/knadh/smtppool v1.1.0
-	github.com/knadh/stuffbin v1.1.0
-	github.com/labstack/echo/v4 v4.11.4
+	github.com/knadh/stuffbin v1.3.0
+	github.com/labstack/echo/v4 v4.13.3
 	github.com/lib/pq v1.10.9
 	github.com/paulbellamy/ratecounter v0.2.0
 	github.com/rhnvrm/simples3 v0.8.3
@@ -44,7 +46,7 @@ require (
 	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/semver/v3 v3.2.0 // indirect
 	github.com/emersion/go-textwrapper v0.0.0-20200911093747-65d896831594 // indirect
-	github.com/fsnotify/fsnotify v1.6.0 // indirect
+	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-jose/go-jose/v3 v3.0.3 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
@@ -68,7 +70,7 @@ require (
 	golang.org/x/image v0.18.0 // indirect
 	golang.org/x/net v0.33.0 // indirect
 	golang.org/x/sys v0.28.0 // indirect
-	golang.org/x/time v0.5.0 // indirect
+	golang.org/x/time v0.8.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect

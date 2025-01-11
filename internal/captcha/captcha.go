@@ -28,11 +28,16 @@ type Captcha struct {
 
 type Opt struct {
 	CaptchaSecret string `json:"captcha_secret"`
+	VerifyURL     string `json:"captcha_verify_url"`
 }
 
 // New returns a new instance of the HTTP CAPTCHA client.
 func New(o Opt) *Captcha {
 	timeout := time.Second * 5
+	verifyURL := o.VerifyURL
+	if verifyURL == "" {
+		verifyURL = "https://challenges.cloudflare.com/turnstile/v0/siteverify"
+	}
 
 	return &Captcha{
 		o: o,
@@ -44,12 +49,13 @@ func New(o Opt) *Captcha {
 				ResponseHeaderTimeout: timeout,
 				IdleConnTimeout:       timeout,
 			},
-		}}
+		},
+	}
 }
 
 // Verify verifies a CAPTCHA request.
 func (c *Captcha) Verify(token string) (error, bool) {
-	resp, err := c.client.PostForm(rootURL, url.Values{
+	resp, err := c.client.PostForm(c.o.VerifyURL, url.Values{
 		"secret":   {c.o.CaptchaSecret},
 		"response": {token},
 	})
