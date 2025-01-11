@@ -458,7 +458,7 @@ func handleSubscriptionForm(c echo.Context) error {
 
 	// Process CAPTCHA.
 	if app.constants.Security.EnableCaptcha {
-		err, ok := app.captcha.Verify(c.FormValue("h-captcha-response"))
+		err, ok := app.captcha.Verify(c.FormValue(app.constants.Security.CaptchaResponseField))
 		if err != nil {
 			app.log.Printf("Captcha request failed: %v", err)
 		}

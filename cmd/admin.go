@@ -12,19 +12,20 @@ import (
 )
 
 type serverConfig struct {
-	RootURL       string          `json:"root_url"`
-	FromEmail     string          `json:"from_email"`
-	Messengers    []string        `json:"messengers"`
-	Langs         []i18nLang      `json:"langs"`
-	Lang          string          `json:"lang"`
-	Permissions   json.RawMessage `json:"permissions"`
-	Update        *AppUpdate      `json:"update"`
-	NeedsRestart  bool            `json:"needs_restart"`
-	HasLegacyUser bool            `json:"has_legacy_user"`
-	Version       string          `json:"version"`
-	CaptchaURL    string          `json:"captcha_url"`
-	VerifyURL     string          `json:"captcha_verify_url"`
-	CaptchaClass  string          `json:"captcha_class"`
+	RootURL              string          `json:"root_url"`
+	FromEmail            string          `json:"from_email"`
+	Messengers           []string        `json:"messengers"`
+	Langs                []i18nLang      `json:"langs"`
+	Lang                 string          `json:"lang"`
+	Permissions          json.RawMessage `json:"permissions"`
+	Update               *AppUpdate      `json:"update"`
+	NeedsRestart         bool            `json:"needs_restart"`
+	HasLegacyUser        bool            `json:"has_legacy_user"`
+	Version              string          `json:"version"`
+	CaptchaURL           string          `json:"captcha_url"`
+	VerifyURL            string          `json:"captcha_verify_url"`
+	CaptchaResponseField string          `json:"captcha_response_field"`
+	CaptchaClass         string          `json:"captcha_class"`
 }
 
 // handleGetServerConfig returns general server config.
@@ -33,14 +34,15 @@ func handleGetServerConfig(c echo.Context) error {
 		app = c.Get("app").(*App)
 	)
 	out := serverConfig{
-		RootURL:       app.constants.RootURL,
-		FromEmail:     app.constants.FromEmail,
-		Lang:          app.constants.Lang,
-		Permissions:   app.constants.PermissionsRaw,
-		HasLegacyUser: app.constants.HasLegacyUser,
-		CaptchaURL:    app.constants.Security.CaptchaURL,
-		VerifyURL:     app.constants.Security.VerifyURL,
-		CaptchaClass:  app.constants.Security.CaptchaClass,
+		RootURL:              app.constants.RootURL,
+		FromEmail:            app.constants.FromEmail,
+		Lang:                 app.constants.Lang,
+		Permissions:          app.constants.PermissionsRaw,
+		HasLegacyUser:        app.constants.HasLegacyUser,
+		CaptchaURL:           app.constants.Security.CaptchaURL,
+		VerifyURL:            app.constants.Security.VerifyURL,
+		CaptchaClass:         app.constants.Security.CaptchaClass,
+		CaptchaResponseField: app.constants.Security.CaptchaResponseField,
 	}
 
 	// Language list.

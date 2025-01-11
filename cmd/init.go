@@ -87,12 +87,13 @@ type constants struct {
 			ClientSecret string `koanf:"client_secret"`
 		} `koanf:"oidc"`
 
-		EnableCaptcha bool   `koanf:"enable_captcha"`
-		CaptchaKey    string `koanf:"captcha_key"`
-		CaptchaURL    string `koanf:"captcha_url"`
-		VerifyURL     string `koanf:"captcha_verify_url"`
-		CaptchaSecret string `koanf:"captcha_secret"`
-		CaptchaClass  string `koanf:"captcha_class"`
+		EnableCaptcha        bool   `koanf:"enable_captcha"`
+		CaptchaKey           string `koanf:"captcha_key"`
+		CaptchaURL           string `koanf:"captcha_url"`
+		VerifyURL            string `koanf:"captcha_verify_url"`
+		CaptchaSecret        string `koanf:"captcha_secret"`
+		CaptchaClass         string `koanf:"captcha_class"`
+		CaptchaResponseField string `koanf:"captcha_response_field"`
 	} `koanf:"security"`
 
 	Appearance struct {
@@ -542,9 +543,15 @@ func initImporter(q *models.Queries, db *sqlx.DB, core *core.Core, app *App) *su
 			UpdateListDateStmt: q.UpdateListsDate.Stmt,
 			NotifCB: func(subject string, data interface{}) error {
 				// Refresh cached subscriber counts and stats.
-				core.RefreshMatViews(true)
+				err1 := core.RefreshMatViews(true)
+				if err1 != nil {
+					return err1
+				}
 
-				app.sendNotification(app.constants.NotifyEmails, subject, notifTplImport, data)
+				err2 := app.sendNotification(app.constants.NotifyEmails, subject, notifTplImport, data)
+				if err2 != nil {
+					return err2
+				}
 				return nil
 			},
 		}, db.DB, app.i18n)
@@ -632,7 +639,10 @@ func initMediaStore() media.Store {
 	switch provider := ko.String("upload.provider"); provider {
 	case "s3":
 		var o s3.Opt
-		ko.Unmarshal("upload.s3", &o)
+		err := ko.Unmarshal("upload.s3", &o)
+		if err != nil {
+			return nil
+		}
 
 		up, err := s3.NewS3Store(o)
 		if err != nil {
@@ -644,7 +654,10 @@ func initMediaStore() media.Store {
 	case "filesystem":
 		var o filesystem.Opts
 
-		ko.Unmarshal("upload.filesystem", &o)
+		err := ko.Unmarshal("upload.filesystem", &o)
+		if err != nil {
+			return nil
+		}
 		o.RootURL = ko.String("app.root_url")
 		o.UploadPath = filepath.Clean(o.UploadPath)
 		o.UploadURI = filepath.Clean(o.UploadURI)
@@ -849,8 +862,9 @@ func initHTTPServer(app *App) *echo.Echo {
 
 func initCaptcha() *captcha.Captcha {
 	return captcha.New(captcha.Opt{
-		CaptchaSecret: ko.String("security.captcha_secret"),
-		VerifyURL:     ko.String("security.captcha_verify_url"),
+		CaptchaSecret:        ko.String("security.captcha_secret"),
+		VerifyURL:            ko.String("security.captcha_verify_url"),
+		CaptchaResponseField: ko.String("security.captcha_response_field"),
 	})
 }
 

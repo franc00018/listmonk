@@ -10,10 +10,6 @@ import (
 	"time"
 )
 
-const (
-	rootURL = "https://hcaptcha.com/siteverify"
-)
-
 type captchaResp struct {
 	Success    bool     `json:"success"`
 	ErrorCodes []string `json:"error_codes"`
@@ -27,8 +23,9 @@ type Captcha struct {
 }
 
 type Opt struct {
-	CaptchaSecret string `json:"captcha_secret"`
-	VerifyURL     string `json:"captcha_verify_url"`
+	CaptchaSecret        string `json:"captcha_secret"`
+	CaptchaResponseField string `json:"captcha_response_field"`
+	VerifyURL            string `json:"captcha_verify_url"`
 }
 
 // New returns a new instance of the HTTP CAPTCHA client.
@@ -63,7 +60,11 @@ func (c *Captcha) Verify(token string) (error, bool) {
 		return err, false
 	}
 
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+		}
+	}(resp.Body)
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return err, false
