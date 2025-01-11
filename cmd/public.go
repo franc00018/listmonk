@@ -451,26 +451,39 @@ func handleSubscriptionForm(c echo.Context) error {
 		app = c.Get("app").(*App)
 	)
 
+	app.log.Printf("Handling subscription form request")
+
 	// If there's a nonce value, a bot could've filled the form.
-	if c.FormValue("nonce") != "" {
+	if nonce := c.FormValue("nonce"); nonce != "" {
+		app.log.Printf("Bot detection: nonce value present: %s", nonce)
 		return echo.NewHTTPError(http.StatusBadGateway, app.i18n.T("public.invalidFeature"))
 	}
 
 	// Process CAPTCHA.
 	if app.constants.Security.EnableCaptcha {
-		err, ok := app.captcha.Verify(c.FormValue(app.constants.Security.CaptchaResponseField))
+		app.log.Printf("CAPTCHA is enabled, processing...")
+		captchaResponse := c.FormValue(app.constants.Security.CaptchaResponseField)
+		app.log.Printf("CAPTCHA response: %s", captchaResponse)
+
+		err, ok := app.captcha.Verify(captchaResponse)
 		if err != nil {
-			app.log.Printf("Captcha request failed: %v", err)
+			app.log.Printf("CAPTCHA verification failed with error: %v", err)
 		}
 
 		if !ok {
+			app.log.Printf("CAPTCHA verification failed")
 			return c.Render(http.StatusBadRequest, tplMessage,
 				makeMsgTpl(app.i18n.T("public.errorTitle"), "", app.i18n.T("public.invalidCaptcha")))
 		}
+		app.log.Printf("CAPTCHA verification successful")
+	} else {
+		app.log.Printf("CAPTCHA is disabled")
 	}
 
+	app.log.Printf("Processing subscription form")
 	hasOptin, err := processSubForm(c)
 	if err != nil {
+		app.log.Printf("Error processing subscription form: %v", err)
 		e, ok := err.(*echo.HTTPError)
 		if !ok {
 			return e
@@ -484,6 +497,7 @@ func handleSubscriptionForm(c echo.Context) error {
 	if hasOptin {
 		msg = "public.subOptinPending"
 	}
+	app.log.Printf("Subscription processed. HasOptin: %v, Message: %s", hasOptin, msg)
 
 	return c.Render(http.StatusOK, tplMessage, makeMsgTpl(app.i18n.T("public.subTitle"), "", app.i18n.Ts(msg)))
 }
