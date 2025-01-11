@@ -83,8 +83,10 @@ type msgTpl struct {
 
 type subFormTpl struct {
 	publicTpl
-	Lists      []models.List
-	CaptchaKey string
+	Lists        []models.List
+	CaptchaKey   string
+	CaptchaClass string
+	CaptchaURL   string
 }
 
 var (
@@ -435,6 +437,8 @@ func handleSubscriptionFormPage(c echo.Context) error {
 
 	if app.constants.Security.EnableCaptcha {
 		out.CaptchaKey = app.constants.Security.CaptchaKey
+		out.CaptchaClass = app.constants.Security.CaptchaClass
+		out.CaptchaURL = app.constants.Security.CaptchaURL
 	}
 
 	return c.Render(http.StatusOK, "subscription-form", out)
